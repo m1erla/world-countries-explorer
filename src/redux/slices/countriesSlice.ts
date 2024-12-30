@@ -16,7 +16,7 @@ const initialState: CountriesState = {
 export const fetchCountries = createAsyncThunk(
   "countries/fetchCountries",
   async () => {
-    const response = await fetch("https://restcountries.com/v3.1/all");
+    const response = await fetch("/v3.1/all");
     if (!response.ok) {
       throw new Error("Failed to fetch countries");
     }

@@ -8,21 +8,26 @@
 }
 
 .backButton {
+  background: rgba(var(--card-background-rgb), 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--text-color);
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: none;
-  border: none;
-  color: var(--text-color);
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  margin-bottom: 2rem;
-  transition: transform 0.2s ease-in-out;
 }
 
 .backButton:hover {
-  transform: translateX(-5px);
+  opacity: 1;
+  transform: translateX(-4px);
+  background: rgba(var(--primary-color-rgb), 0.2);
 }
 
 .header {
@@ -33,14 +38,17 @@
 .header h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  color: #3498db;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--text-color);
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header h2 {
   font-size: 1.8rem;
-  color: #ffffff;
+  color: var(--text-color);
   opacity: 0.9;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .detailContent {

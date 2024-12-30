@@ -2,7 +2,6 @@
   "name": "world-countries-explorer",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://restcountries.com",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

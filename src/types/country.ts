@@ -1,16 +1,18 @@
 export interface Country {
-  id: string;
   name: string;
-  flag: string;
   capital: string;
   population: number;
   continent: string;
+  languages: string[];
+  flag: string;
+  area: number;
+  currencies: string[];
+  timezones: string[];
   currency: {
-    code: string;
     name: string;
+    code: string;
     symbol: string;
   };
-  languages: string[];
   coordinates: {
     latitude: number;
     longitude: number;

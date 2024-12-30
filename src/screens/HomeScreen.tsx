@@ -1,38 +1,31 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useMemo, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import styles from "./HomeScreen.module.css";
+import SearchAndFilter from "../components/SearchAndFilter";
 import { CountryCard } from "../components/CountryCard";
 import { CountryModal } from "../components/CountryModal";
-import type { Country } from "../types/country";
+import { RootState, AppDispatch } from "../redux/store";
 import { fetchCountries } from "../redux/slices/countriesSlice";
 import { toggleTheme } from "../redux/slices/themeSlice";
-import type { AppDispatch, RootState } from "../redux/store";
-
-const continents = [
-  { id: "africa", name: "Africa", emoji: "🌍" },
-  { id: "asia", name: "Asia", emoji: "🌏" },
-  { id: "europe", name: "Europe", emoji: "🌍" },
-  { id: "north-america", name: "North America", emoji: "🌎" },
-  { id: "south-america", name: "South America", emoji: "🌎" },
-  { id: "oceania", name: "Oceania", emoji: "🌏" },
-  { id: "antarctica", name: "Antarctica", emoji: "🌍" },
-];
+import type { Country } from "../types/country";
 
 export const HomeScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const {
-    items: countries,
-    status,
-    error,
-  } = useSelector((state: RootState) => state.countries);
-  const isDark = useSelector((state: RootState) => state.theme.isDark);
-  const [selectedContinent, setSelectedContinent] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [selectedContinent, setSelectedContinent] = useState<string | null>(
+    null
+  );
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
 
+  const { data: countries, status } = useSelector(
+    (state: RootState) => state.countries
+  );
+  const isDark = useSelector((state: RootState) => state.theme.isDark);
+
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchCountries());
-    }
-  }, [dispatch, status]);
+    dispatch(fetchCountries());
+  }, [dispatch]);
 
   useEffect(() => {
     document.documentElement.setAttribute(
@@ -41,124 +34,110 @@ export const HomeScreen: React.FC = () => {
     );
   }, [isDark]);
 
-  const filteredCountries =
-    selectedContinent === "all"
-      ? countries
-      : countries.filter((country) => {
-          const normalizedContinent = country.continent
-            .toLowerCase()
-            .replace(/\s+/g, "-");
-          return normalizedContinent === selectedContinent;
-        });
+  const filteredAndSortedCountries = useMemo(() => {
+    let result = [...countries];
+
+    // Continent filtering
+    if (selectedContinent) {
+      result = result.filter(
+        (country) => country.continent === selectedContinent
+      );
+    }
+
+    // Search filtering
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (country) =>
+          country.name.toLowerCase().includes(query) ||
+          country.capital?.toLowerCase().includes(query) ||
+          country.languages.some((lang) => lang.toLowerCase().includes(query))
+      );
+    }
+
+    // Population sorting
+    result.sort((a, b) => {
+      const comparison = a.population - b.population;
+      return sortOrder === "asc" ? comparison : -comparison;
+    });
+
+    return result;
+  }, [countries, selectedContinent, searchQuery, sortOrder]);
+
+  const continents = ["Africa", "Americas", "Asia", "Europe", "Oceania"];
+
+  if (status === "loading") {
+    return (
+      <div className={styles.loadingContainer}>
+        <p>Loading countries...</p>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <nav className="navbar">
-        <a href="/" className="navbar-brand">
-          <span style={{ fontSize: "2rem" }}>🌍</span>
-          <h1>World Countries Explorer</h1>
-        </a>
-        <div className="continents-nav">
-          <a
-            href="#"
-            className={`continent-link ${
-              selectedContinent === "all" ? "active" : ""
-            }`}
-            onClick={(e) => {
-              e.preventDefault();
-              setSelectedContinent("all");
-            }}
-          >
-            All
-          </a>
-          {continents.map((continent) => (
-            <a
-              key={continent.id}
-              href="#"
-              className={`continent-link ${
-                selectedContinent === continent.id ? "active" : ""
-              }`}
-              onClick={(e) => {
-                e.preventDefault();
-                setSelectedContinent(continent.id);
-              }}
-            >
-              {continent.emoji} {continent.name}
-            </a>
-          ))}
-        </div>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1>World Countries Explorer</h1>
         <button
-          className="theme-toggle"
+          className={styles.themeToggle}
           onClick={() => dispatch(toggleTheme())}
-          title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
         >
-          {isDark ? "🌞" : "🌙"}
+          {isDark ? "🔆" : "🌙"}
         </button>
-      </nav>
+      </div>
 
-      <main className="main-content">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-            gap: "2rem",
-            padding: "1rem",
-          }}
+      <SearchAndFilter
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        sortOrder={sortOrder}
+        onSortChange={setSortOrder}
+      />
+
+      <div className={styles.continentScroll}>
+        <button
+          className={`${styles.continentButton} ${
+            !selectedContinent ? styles.selectedContinent : ""
+          }`}
+          onClick={() => setSelectedContinent(null)}
         >
-          {status === "loading" ? (
-            <div
-              style={{
-                gridColumn: "1 / -1",
-                textAlign: "center",
-                padding: "4rem",
-                color: "var(--text-color)",
-              }}
-            >
-              <h2>Loading...</h2>
-              <p>Please wait</p>
-            </div>
-          ) : status === "failed" ? (
-            <div
-              style={{
-                gridColumn: "1 / -1",
-                textAlign: "center",
-                padding: "4rem",
-                color: "var(--text-color)",
-              }}
-            >
-              <h2>Error!</h2>
-              <p>{error}</p>
-            </div>
-          ) : filteredCountries.length === 0 ? (
-            <div
-              style={{
-                gridColumn: "1 / -1",
-                textAlign: "center",
-                padding: "4rem",
-                color: "var(--text-color)",
-              }}
-            >
-              <h2>No Countries Found</h2>
-              <p>Please try selecting a different continent</p>
-            </div>
-          ) : (
-            filteredCountries.map((country) => (
-              <CountryCard
-                key={country.id}
-                country={country}
-                onPress={(country) => setSelectedCountry(country)}
-              />
-            ))
-          )}
-        </div>
-      </main>
+          All
+        </button>
+        {continents.map((continent) => (
+          <button
+            key={continent}
+            className={`${styles.continentButton} ${
+              selectedContinent === continent ? styles.selectedContinent : ""
+            }`}
+            onClick={() => setSelectedContinent(continent)}
+          >
+            {continent}
+          </button>
+        ))}
+      </div>
 
+      <div className={styles.countriesContainer}>
+        {filteredAndSortedCountries.map((country) => (
+          <CountryCard
+            key={country.name}
+            country={country}
+            onPress={(country) => setSelectedCountry(country)}
+          />
+        ))}
+        {filteredAndSortedCountries.length === 0 && (
+          <div className={styles.noResults}>
+            <p>No results found</p>
+            <small>
+              Please try a different search term or clear the filters
+            </small>
+          </div>
+        )}
+      </div>
       {selectedCountry && (
         <CountryModal
           country={selectedCountry}
           onClose={() => setSelectedCountry(null)}
         />
       )}
-    </>
+    </div>
   );
 };

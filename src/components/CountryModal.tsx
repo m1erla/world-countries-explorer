@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import type { Country } from "../types/country";
 import styles from "./CountryModal.module.css";
 
@@ -11,8 +12,14 @@ export const CountryModal: React.FC<CountryModalProps> = ({
   country,
   onClose,
 }) => {
+  const navigate = useNavigate();
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat("en-US").format(num);
+  };
+
+  const handleLearnMore = () => {
+    onClose();
+    navigate(`/country/${encodeURIComponent(country.name)}`);
   };
 
   return (
@@ -102,6 +109,11 @@ export const CountryModal: React.FC<CountryModalProps> = ({
               </div>
             </div>
           </div>
+
+          <button className={styles.learnMoreButton} onClick={handleLearnMore}>
+            <span className={styles.buttonText}>Learn More</span>
+            <span className={styles.buttonIcon}>→</span>
+          </button>
         </div>
       </div>
     </div>

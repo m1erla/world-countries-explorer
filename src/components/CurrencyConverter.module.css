@@ -1,0 +1,73 @@
+.container {
+  background-color: var(--elements-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.converterBox {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px;
+}
+
+.inputGroup {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.inputGroup input {
+  width: 120px;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+}
+
+.inputGroup select,
+.result select {
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  min-width: 200px;
+}
+
+.equals {
+  text-align: center;
+  font-size: 24px;
+  color: var(--text-color);
+}
+
+.result {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.convertedAmount {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--text-color);
+  min-width: 120px;
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .inputGroup,
+  .result {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inputGroup input,
+  .inputGroup select,
+  .result select {
+    width: 100%;
+  }
+} 

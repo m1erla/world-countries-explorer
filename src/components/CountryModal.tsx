@@ -96,6 +96,32 @@ export const CountryModal: React.FC<CountryModalProps> = ({
             </div>
 
             <div className={styles.infoSection}>
+              <h3>Economic Indicators</h3>
+              <div className={styles.infoGrid}>
+                <div className={styles.infoItem}>
+                  <strong>Minimum Wage</strong>
+                  <span>
+                    ${formatNumber(country.economicIndicators.minimumWage)}
+                    /month
+                  </span>
+                </div>
+                <div className={styles.infoItem}>
+                  <strong>Average Salary</strong>
+                  <span>
+                    ${formatNumber(country.economicIndicators.averageSalary)}
+                    /month
+                  </span>
+                </div>
+                <div className={styles.infoItem}>
+                  <strong>Unemployment Rate</strong>
+                  <span>
+                    {country.economicIndicators.unemploymentRate.toFixed(1)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.infoSection}>
               <h3>Location</h3>
               <div className={styles.infoGrid}>
                 <div className={styles.infoItem}>

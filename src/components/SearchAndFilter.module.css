@@ -1,13 +1,9 @@
 .container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 2rem;
-  padding: 1rem;
-  background-color: var(--card-background);
-  border-radius: var(--border-radius);
-  box-shadow: var(--card-shadow);
+  max-width: 600px;
+  margin-right: 1rem;
 }
 
 .searchBox {
@@ -17,19 +13,22 @@
 
 .searchInput {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border: 1px solid var(--text-secondary);
-  border-radius: var(--border-radius);
-  background-color: var(--background-color);
+  padding: 0.5rem 1rem 0.5rem 2.25rem;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--card-background);
   color: var(--text-color);
-  font-size: 1rem;
-  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.searchInput:hover {
+  background-color: var(--hover-color, rgba(0, 0, 0, 0.05));
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px var(--primary-color);
+  background-color: var(--hover-color, rgba(0, 0, 0, 0.08));
 }
 
 .searchIcon {
@@ -37,50 +36,68 @@
   left: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 1.25rem;
-  pointer-events: none;
+  width: 1rem;
+  height: 1rem;
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
+  opacity: 0.7;
+}
+
+.searchBox:focus-within .searchIcon {
+  color: var(--text-color);
+  opacity: 1;
 }
 
 .sortBox {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  color: var(--text-color);
 }
 
 .sortBox label {
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  font-size: 0.875rem;
   white-space: nowrap;
 }
 
 .sortSelect {
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--text-secondary);
-  border-radius: var(--border-radius);
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--card-background);
+  color: var(--text-color);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1em;
+}
+
+.sortSelect option {
   background-color: var(--background-color);
   color: var(--text-color);
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  padding: 0.5rem;
+}
+
+.sortSelect:hover {
+  background-color: var(--hover-color, rgba(0, 0, 0, 0.05));
 }
 
 .sortSelect:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px var(--primary-color);
+  background-color: var(--hover-color, rgba(0, 0, 0, 0.08));
 }
 
 @media (max-width: 768px) {
   .container {
-    flex-direction: column;
-    gap: 1rem;
+    margin-right: 0;
   }
 
   .sortBox {
-    width: 100%;
-  }
-
-  .sortSelect {
-    flex: 1;
+    display: none;
   }
 } 

@@ -4,7 +4,7 @@ import styles from "./CountryDetailsScreen.module.css";
 import type { Country } from "../types/country";
 import { IoArrowBack } from "react-icons/io5";
 
-interface TouristInfo {
+export interface TouristInfo {
   attractions: Array<{
     name: string;
     description: string;
@@ -21,6 +21,7 @@ interface TouristInfo {
     details: string;
     additionalInfo?: string;
   }>;
+  currencyCode: string;
 }
 
 export const getCountrySpecificInfo = (countryName: string): TouristInfo => {
@@ -71,6 +72,7 @@ export const getCountrySpecificInfo = (countryName: string): TouristInfo => {
             "From luxury hotels to boutique cave hotels in Cappadocia and traditional guesthouses.",
         },
       ],
+      currencyCode: "TRY",
     },
     Japan: {
       attractions: [
@@ -118,6 +120,7 @@ export const getCountrySpecificInfo = (countryName: string): TouristInfo => {
             "Traditional ryokans, capsule hotels, and modern accommodations.",
         },
       ],
+      currencyCode: "JPY",
     },
     France: {
       attractions: [
@@ -164,6 +167,7 @@ export const getCountrySpecificInfo = (countryName: string): TouristInfo => {
             "From luxury hotels to charming bed & breakfasts and apartments.",
         },
       ],
+      currencyCode: "EUR",
     },
     Italy: {
       attractions: [
@@ -211,6 +215,7 @@ export const getCountrySpecificInfo = (countryName: string): TouristInfo => {
             "From historic hotels to agriturismos in Tuscany and boutique B&Bs.",
         },
       ],
+      currencyCode: "EUR",
     },
     Spain: {
       attractions: [
@@ -258,6 +263,7 @@ export const getCountrySpecificInfo = (countryName: string): TouristInfo => {
             "Historic paradores, modern hotels, and charming pensiones in old town centers.",
         },
       ],
+      currencyCode: "EUR",
     },
     Greece: {
       attractions: [
@@ -305,6 +311,7 @@ export const getCountrySpecificInfo = (countryName: string): TouristInfo => {
             "Luxury resorts, traditional guesthouses, and family-run hotels with stunning views.",
         },
       ],
+      currencyCode: "EUR",
     },
     Egypt: {
       attractions: [
@@ -352,6 +359,7 @@ export const getCountrySpecificInfo = (countryName: string): TouristInfo => {
             "Luxury Nile cruises, historic hotels, and desert camps under the stars.",
         },
       ],
+      currencyCode: "EGP",
     },
     "United Kingdom": {
       attractions: [
@@ -399,6 +407,7 @@ export const getCountrySpecificInfo = (countryName: string): TouristInfo => {
             "Historic hotels, cozy B&Bs, countryside manors, and modern city apartments.",
         },
       ],
+      currencyCode: "GBP",
     },
     China: {
       attractions: [
@@ -446,6 +455,7 @@ export const getCountrySpecificInfo = (countryName: string): TouristInfo => {
             "International hotel chains, traditional courtyard hotels, and modern city hotels.",
         },
       ],
+      currencyCode: "CNY",
     },
     India: {
       attractions: [
@@ -493,6 +503,7 @@ export const getCountrySpecificInfo = (countryName: string): TouristInfo => {
             "Heritage palaces, modern hotels, eco-resorts, and traditional homestays.",
         },
       ],
+      currencyCode: "INR",
     },
     Brazil: {
       attractions: [
@@ -540,6 +551,7 @@ export const getCountrySpecificInfo = (countryName: string): TouristInfo => {
             "Beachfront resorts, boutique hotels in historic areas, and Amazon eco-lodges.",
         },
       ],
+      currencyCode: "BRL",
     },
     "United States": {
       attractions: [
@@ -587,6 +599,7 @@ export const getCountrySpecificInfo = (countryName: string): TouristInfo => {
             "From luxury resorts and boutique hotels to roadside motels, vacation rentals, and camping in national parks.",
         },
       ],
+      currencyCode: "USD",
     },
     // Diğer ülkeler için benzer şekilde devam edebiliriz...
   };
@@ -634,6 +647,7 @@ export const getCountrySpecificInfo = (countryName: string): TouristInfo => {
           details: "Various accommodation options for different budgets.",
         },
       ],
+      currencyCode: "USD",
     }
   );
 };

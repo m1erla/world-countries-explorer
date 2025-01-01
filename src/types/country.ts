@@ -8,6 +8,7 @@ export interface Country {
   area: number;
   currencies: string[];
   timezones: string[];
+  annualTourists: number;
   currency: {
     name: string;
     code: string;
@@ -16,5 +17,10 @@ export interface Country {
   coordinates: {
     latitude: number;
     longitude: number;
+  };
+  economicIndicators: {
+    minimumWage: number; // Aylık asgari ücret (USD)
+    averageSalary: number; // Aylık ortalama maaş (USD)
+    unemploymentRate: number; // İşsizlik oranı (%)
   };
 } 

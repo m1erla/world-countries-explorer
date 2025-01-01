@@ -1,95 +1,98 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { Country } from "../../types/country";
+import { api } from "../../services/api";
 
 interface CountriesState {
   data: Country[];
+  filteredData: Country[];
+  selectedContinent: string;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
+// localStorage'dan başlangıç durumunu al
+const loadInitialState = (): Partial<CountriesState> => {
+  try {
+    const savedState = localStorage.getItem('countries_state');
+    return savedState ? JSON.parse(savedState) : {};
+  } catch (error) {
+    console.error("Error loading initial state:", error);
+    return {};
+  }
+};
+
 const initialState: CountriesState = {
   data: [],
+  filteredData: [],
+  selectedContinent: "All",
   status: "idle",
   error: null,
+  ...loadInitialState()
 };
 
 export const fetchCountries = createAsyncThunk(
   "countries/fetchCountries",
   async () => {
     try {
-      const response = await fetch("https://restcountries.com/v3.1/all", {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        mode: 'cors',
-        cache: 'no-cache',
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const text = await response.text();
-      try {
-        const data = JSON.parse(text);
-        return data.map((country: any) => {
-          const currencyKey = country.currencies ? Object.keys(country.currencies)[0] : null;
-          const currencyInfo = currencyKey ? country.currencies[currencyKey] : null;
-
-          return {
-            name: country.name.common,
-            capital: country.capital?.[0] || "N/A",
-            population: country.population,
-            continent: country.region,
-            languages: Object.values(country.languages || {}),
-            flag: country.flags.svg,
-            area: country.area,
-            currencies: Object.values(country.currencies || {}).map((curr: any) => curr.name),
-            timezones: country.timezones,
-            currency: currencyInfo ? {
-              name: currencyInfo.name,
-              code: currencyKey,
-              symbol: currencyInfo.symbol
-            } : {
-              name: "N/A",
-              code: "N/A",
-              symbol: "N/A"
-            },
-            coordinates: {
-              latitude: country.latlng?.[0] || 0,
-              longitude: country.latlng?.[1] || 0
-            }
-          };
-        });
-      } catch (error) {
-        throw error;
-      }
-    } catch (error) {
+      return await api.getAllCountries();
+    } catch (error: any) {
       throw error;
     }
   }
 );
 
+const filterCountriesByContinent = (countries: Country[], continent: string): Country[] => {
+  if (continent === "All") return countries;
+  return countries.filter(country => country.continent === continent);
+};
+
 const countriesSlice = createSlice({
   name: "countries",
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedContinent: (state, action) => {
+      state.selectedContinent = action.payload;
+      state.filteredData = filterCountriesByContinent(state.data, action.payload);
+      // State'i localStorage'a kaydet
+      try {
+        localStorage.setItem('countries_state', JSON.stringify({
+          selectedContinent: action.payload,
+          filteredData: state.filteredData
+        }));
+      } catch (error) {
+        console.error("Error saving state:", error);
+      }
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCountries.pending, (state) => {
-        state.status = "loading";
+        if (state.status === "idle") {
+          state.status = "loading";
+        }
       })
       .addCase(fetchCountries.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.data = action.payload;
+        state.filteredData = filterCountriesByContinent(action.payload, state.selectedContinent);
+        state.error = null;
+        // Başarılı veri çekme sonrası state'i kaydet
+        try {
+          localStorage.setItem('countries_state', JSON.stringify({
+            data: state.data,
+            filteredData: state.filteredData,
+            selectedContinent: state.selectedContinent
+          }));
+        } catch (error) {
+          console.error("Error saving state:", error);
+        }
       })
       .addCase(fetchCountries.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message || "Something went wrong";
+        state.error = action.error.message || "Bir hata oluştu";
       });
   },
 });
 
+export const { setSelectedContinent } = countriesSlice.actions;
 export default countriesSlice.reducer; 

@@ -1,6 +1,6 @@
 import type { Country } from "../types/country";
 
-const BASE_URL = "https://restcountries.com/v3.1";
+const BASE_URL = "https://restcountries.com/v3.1/all?fields=name,flags`";
 
 // Önbellekleme için değişken ve localStorage anahtarları
 const CACHE_KEY = 'countries_cache';
